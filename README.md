@@ -3,7 +3,7 @@
 ## Repartitions des etudiants
 
 * Etudiant 1 = Baptiste
-    * percevoir
+    * Percevoir
 * Etudiant 2 = Tom
     * Decider
 * Etudiant 3 = Eliot
