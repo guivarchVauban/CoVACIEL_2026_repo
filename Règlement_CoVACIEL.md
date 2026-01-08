@@ -34,3 +34,64 @@
 - [ ] Detection du signal de départ (ASCII **$GO** & **STOP**)
 - [ ] Détectabilité de la voiture par un lidar et capteur
 - [ ] Capacité à repartir en marche arrière en cas de bloquage
+- [ ] La voiture est détectable par un lidar
+
+## Départ
+
+Le top départ est transmis par communication sans fil, les 2 messages envoyés seront "**$GO**" et **STOP** pour le début et l'arrêt des voitures.
+
+Le signal est envoyé par un appareil XBEE de configuration : 
+
+    firmware: 802.15.4;
+    coordinateur;
+    mode transparent;
+    identifiant du réseau PAN (PAN-ID) = 1234;
+    Canal (CH) = C.
+
+## Qualifications
+
+2 manches de qualifications par voiture, seule sur le circuit
+
+2 tours par manche de qualification
+
+1er tour sans obstacles sur une piste A
+2eme tour avec obstacles sur une piste B (taille obstacle > voiture)
+
+Noté selon le pourcentage de tours effectués, ou par temps de complétion
+
+Si la voiture se bloque, un arbitre la débloque
+
+Les résultats (=classement) détermine la position sur la grille de départ
+
+## Course
+
+3 minutes pour installer la voiture sur la piste
+
+Dès que toutes les équipes sont prêtes, plus le droit de toucher la voiture.
+
+Top départ donné par le module XBEE
+
+ ### Disqualifications
+
+- Comportement aggressif
+- Empêchement de dépasser
+- Voiture immobile plus de 10s sans voiture la bloquant
+- Contre-sens sur plus de 2m
+- Voiture en marche arrière avec une autre voiture derrière elle.
+
+Seuls les arbitre peuvent toucher les voitures lors de la course
+
+## Points
+
+*1er* **25 pts** 
+*2nd* **18 pts** 
+*3ème* **15 pts** 
+*4ème* **12 pts** 
+*5ème* **10 pts** 
+*6ème* **8 pts** 
+*7ème* **6 pts** 
+*8ème* **4 pts** 
+*9ème* **2 pts** 
+*10ème* **1 pts**
+
+En cas d'égalité, les temps des qualifications sont pris en compte.
