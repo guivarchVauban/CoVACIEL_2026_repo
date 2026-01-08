@@ -20,7 +20,7 @@
 
 ## La piste 
 
-- [ ] Le tracé n'est pas connu avant le jour de la course. Il est interdit de donner des infos sur la forme de la course a la voiture
+- Le tracé n'est pas connu avant le jour de la course. Il est interdit de donner des infos sur la forme de la course a la voiture
 
 - Les murs de la piste font **200mm** de hauteur, de couleur **verte a droite** RAL 6037 et **rouge a gauche** RAL 3020, les virages feront minimum R=400mm de rayon de courbure
 
