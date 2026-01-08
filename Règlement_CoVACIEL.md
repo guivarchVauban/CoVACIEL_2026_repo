@@ -2,8 +2,8 @@
 
 ## La voiture
 
-Le moteur et le chassis doivent être ceux d'origine, **on ne peut pas les remplacer**.  []
-La batterie doit être une NiMH 7.2V avec capacité de 5000mAh maximum.  []
+Le moteur et le chassis doivent être ceux d'origine, **on ne peut pas les remplacer**.  [x]
+La batterie doit être une NiMH 7.2V avec capacité de 5000mAh maximum.  [x]
 La carrosserie doit recouvrir la voiture à **minimum 80%**.  [ ]
 
 L'ensemble de la voiture **(capteurs compris)** doivent posséder des dimensions strictes : 
