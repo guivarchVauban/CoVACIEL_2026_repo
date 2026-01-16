@@ -1,16 +1,19 @@
-# CoVaciel_2026
+# Projet CoVACIEL 2026
 
-## Repartitions des etudiants
+Bienvenue sur le dépôt du projet CoVACIEL. Cette arborescence est structurée pour faciliter la collaboration.
 
-* Etudiant 1 = Baptiste
-    * Percevoir
-* Etudiant 2 = Tom
-    * Decider
-* Etudiant 3 = Eliot
-    * Agir
-<<<<<<< HEAD
-je fais un test
-=======
+## 📁 Structure du Projet
+
+* **`src/`** : Contient l'intégralité du **code source** (fichiers .py, .c, etc.). C'est ici que l'on développe les fonctionnalités.
+* **`docs/`** : Regroupe la **documentation technique**, les schémas d'architecture (SysML, UML) et les rapports.
+* **`scripts/`** : Contient les **fichiers de configuration** et les scripts utilitaires (automatisation, installation).
+* **`tests/`** : Dédié aux **tests unitaires** et aux fichiers de **simulation** pour valider le fonctionnement.
+
+---
+## 🛠 Guide pour l'équipe
+- Ne déposez jamais de fichiers en vrac à la racine.
+- Chaque nouveau module de code doit aller dans `/src`.
+- Toute mise à jour de conception doit être documentée dans `/docs`.
 
 Lien du Google Drive : https://drive.google.com/drive/folders/1ua3N70ncl6qyzg5IN_nwOoT_M6hROt5A?usp=sharing
 >>>>>>> 24a3a8ac0cd7dba8102bf88810155ab3a4c96676
