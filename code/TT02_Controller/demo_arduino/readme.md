@@ -8,5 +8,3 @@ Pourtant il va falloir que tu t'assures que tu comprends l'intégralité de ce c
 
 - Commente chacune des fonctions en mode documentation Doxygen (@brief, @param...)
 - Rajoute des commentaires à la main là ou ça te semble nécessaire
-
-- 
