@@ -16,3 +16,13 @@ Bienvenue sur le dépôt du projet CoVACIEL. Cette arborescence est structurée 
 - Toute mise à jour de conception doit être documentée dans `/docs`.
 
 Lien du Google Drive : https://drive.google.com/drive/folders/1ua3N70ncl6qyzg5IN_nwOoT_M6hROt5A?usp=sharing
+
+
+---
+## Codes hexadécimeux des couleurs
+
+
+                    r   g  b
+# Rouge RAL 3020 : 193 18 28
+
+# VERT RAL 6037 : 38 231 18
