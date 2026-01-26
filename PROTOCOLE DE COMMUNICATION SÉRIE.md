@@ -12,4 +12,4 @@ OCTET 4 : CHECKSUM (Valeur : Vitesse + Direction) Sert à vérifier que la donn�
 
 EXEMPLE DE COMMANDE Pour avancer à 20% (valeur 70) et tourner à droite à 10% (valeur 60) : Octet 1 (Start) : 0xFF Octet 2 (Vitesse) : 0x46 (70 en décimal) Octet 3 (Direction) : 0x3C (60 en décimal) Octet 4 (Checksum) : 0x82 (70 + 60 = 130 en décimal)
 
-Trame envoyée en hexadécimal : FF 46 3C 82
+### Exemple de trame : FF 46 3C 82
