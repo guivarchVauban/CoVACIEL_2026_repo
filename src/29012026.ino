@@ -12,7 +12,7 @@ void setup() {
     Serial.begin(115200); 
     Wire.begin(); // on allume le protocole I2C
     pwmController.resetDevices();
-    pwmController.init();
+    pwmController.init(); 
     pwmController.setPWMFrequency(50);
     pwmController.setChannelPWM(1, 307); // On met le neutre tout de suite 
 }
@@ -31,7 +31,7 @@ void loop() {
                 dRecu = d;
 
                 // DIRECTION (Canal 0)
-                pwmController.setChannelPWM(0, map(dRecu, 0, 100, 388, 288)); // produit en croix
+                pwmController.setChannelPWM(0, map(dRecu, 0, 100, 388, 288)); // produit en croix on transforme mon 0-100 en ticks
 
                 // MOTEUR AVANT/STOP (Canal 1)
                 if (vRecu >= 50) {
@@ -40,7 +40,7 @@ void loop() {
                         pwmController.setChannelPWM(1, 307);
                     } else {
                         // Mapping Marche Avant
-                        pwmController.setChannelPWM(1, map(vRecu, 51, 100, 325, 410));
+                        pwmController.setChannelPWM(1, map(vRecu, 51, 100, 325, 410));// on commence à 325 pour que la voiture est assez de ticks pour démarrer, sinon le moteur peut siffler en dessous
                     }
                 }
             }else{
@@ -52,28 +52,28 @@ void loop() {
 
     // ÉTAPE 3 : GESTION MARCHE ARRIERE (Non-bloquante)
     if (vRecu < 50) {
-        gestionMarcheArriere();
+        gestionMarcheArriere(); //  si la vitesses est < 50 on appel la fonction gestionMarcheArriere
     }
 }
 
 void gestionMarcheArriere() {
-    unsigned long m = millis();
-    int pwmCible = map(vRecu, 0, 49, 220, 285);
+    unsigned long m = millis(); // chronomètre interne de l'arduino pour savoir combien de temps s'est écoulé
+    int pwmCible = map(vRecu, 0, 49, 220, 285); // produit en croix, on transforme mon 0-49 en 220-285 ticks
 
     switch (etapeAR) {
-        case 0: pwmController.setChannelPWM(1, 205); chronoAR = m; etapeAR = 1; break; // Frein
-        case 1: if (m - chronoAR >= 350) {
+        case 0: pwmController.setChannelPWM(1, 205); chronoAR = m; etapeAR = 1; break; // Frein // on envoie 205 et on lance le chrono (chrono AR = m) et on passe au case 1
+        case 1: if (m - chronoAR >= 350) { 
                       pwmController.setChannelPWM(1, 307); chronoAR = m; etapeAR = 2; 
                 } 
-                break; // Neutre
+                break; // Si ça fait plus de 350ms qu'on freine alors on passe met le moteur au neutre et on passe au case 2
         case 2: if (m - chronoAR >= 350) { 
                     pwmController.setChannelPWM(1, 220);
                     chronoAR = m; etapeAR = 3; 
                 }
-                break; // Kickstart
+                break; // Kickstart // on attend encore 350ms et puis on envoie le signal de recul (220) et on passe au case 3 
         case 3: if (m - chronoAR >= 100) {
-              pwmController.setChannelPWM(1, pwmCible);
-              etapeAR = 4; 
+              pwmController.setChannelPWM(1, pwmCible); 
+              etapeAR = 4; // on attend 100ms et on envoie la vitesse cible désiré.
               } 
               break; // Stabilise
         case 4: pwmController.setChannelPWM(1, pwmCible);
