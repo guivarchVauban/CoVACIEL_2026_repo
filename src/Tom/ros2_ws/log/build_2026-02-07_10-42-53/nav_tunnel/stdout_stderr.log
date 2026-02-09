@@ -1,0 +1,29 @@
+running develop
+Removing /home/util/ros2_ws/install/nav_tunnel/lib/python3.10/site-packages/nav-tunnel.egg-link (link to .)
+running egg_info
+writing ../../build/nav_tunnel/nav_tunnel.egg-info/PKG-INFO
+writing dependency_links to ../../build/nav_tunnel/nav_tunnel.egg-info/dependency_links.txt
+writing entry points to ../../build/nav_tunnel/nav_tunnel.egg-info/entry_points.txt
+writing requirements to ../../build/nav_tunnel/nav_tunnel.egg-info/requires.txt
+writing top-level names to ../../build/nav_tunnel/nav_tunnel.egg-info/top_level.txt
+reading manifest file '../../build/nav_tunnel/nav_tunnel.egg-info/SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file '../../build/nav_tunnel/nav_tunnel.egg-info/SOURCES.txt'
+running build
+running build_py
+copying nav_tunnel/nav_tunnel.py -> /home/util/ros2_ws/build/nav_tunnel/build/lib/nav_tunnel
+running install
+running install_lib
+creating /home/util/ros2_ws/install/nav_tunnel/lib/python3.10/site-packages/nav_tunnel
+copying /home/util/ros2_ws/build/nav_tunnel/build/lib/nav_tunnel/__init__.py -> /home/util/ros2_ws/install/nav_tunnel/lib/python3.10/site-packages/nav_tunnel
+copying /home/util/ros2_ws/build/nav_tunnel/build/lib/nav_tunnel/nav_tunnel.py -> /home/util/ros2_ws/install/nav_tunnel/lib/python3.10/site-packages/nav_tunnel
+byte-compiling /home/util/ros2_ws/install/nav_tunnel/lib/python3.10/site-packages/nav_tunnel/__init__.py to __init__.cpython-310.pyc
+byte-compiling /home/util/ros2_ws/install/nav_tunnel/lib/python3.10/site-packages/nav_tunnel/nav_tunnel.py to nav_tunnel.cpython-310.pyc
+running install_data
+copying resource/nav_tunnel -> /home/util/ros2_ws/install/nav_tunnel/share/ament_index/resource_index/packages
+copying package.xml -> /home/util/ros2_ws/install/nav_tunnel/share/nav_tunnel
+running install_egg_info
+Copying ../../build/nav_tunnel/nav_tunnel.egg-info to /home/util/ros2_ws/install/nav_tunnel/lib/python3.10/site-packages/nav_tunnel-0.0.0-py3.10.egg-info
+running install_scripts
+Installing nav_tunnel script to /home/util/ros2_ws/install/nav_tunnel/lib/nav_tunnel
+writing list of installed files to '/home/util/ros2_ws/build/nav_tunnel/install.log'

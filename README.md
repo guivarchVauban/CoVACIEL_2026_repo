@@ -1,4 +1,4 @@
-# CoVaciel_2026
+# Projet CoVACIEL 2026
 
 ## Repartitions des etudiants
 * Etudiant 3 = Eliot
