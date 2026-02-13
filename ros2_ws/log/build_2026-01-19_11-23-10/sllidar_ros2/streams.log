@@ -1,0 +1,33 @@
+[0.018s] Invoking command in '/home/ros/ros2_ws/build/sllidar_ros2': /usr/bin/cmake /home/ros/ros2_ws/src/sllidar_ros2 -DCMAKE_INSTALL_PREFIX=/home/ros/ros2_ws/install/sllidar_ros2
+[0.551s] -- The C compiler identification is GNU 11.4.0
+[0.809s] -- The CXX compiler identification is GNU 11.4.0
+[0.823s] -- Detecting C compiler ABI info
+[0.912s] -- Detecting C compiler ABI info - done
+[0.918s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.919s] -- Detecting C compile features
+[0.920s] -- Detecting C compile features - done
+[0.925s] -- Detecting CXX compiler ABI info
+[1.003s] -- Detecting CXX compiler ABI info - done
+[1.013s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[1.013s] -- Detecting CXX compile features
+[1.014s] -- Detecting CXX compile features - done
+[1.021s] [31mCMake Error at CMakeLists.txt:34 (find_package):
+[1.021s]   By not providing "Findament_cmake.cmake" in CMAKE_MODULE_PATH this project
+[1.021s]   has asked CMake to find a package configuration file provided by
+[1.021s]   "ament_cmake", but CMake did not find one.
+[1.021s] 
+[1.021s]   Could not find a package configuration file provided by "ament_cmake" with
+[1.021s]   any of the following names:
+[1.021s] 
+[1.021s]     ament_cmakeConfig.cmake
+[1.021s]     ament_cmake-config.cmake
+[1.021s] 
+[1.021s]   Add the installation prefix of "ament_cmake" to CMAKE_PREFIX_PATH or set
+[1.021s]   "ament_cmake_DIR" to a directory containing one of the above files.  If
+[1.021s]   "ament_cmake" provides a separate development package or SDK, be sure it
+[1.021s]   has been installed.
+[1.021s] 
+[1.022s] [0m
+[1.022s] -- Configuring incomplete, errors occurred!
+[1.022s] See also "/home/ros/ros2_ws/build/sllidar_ros2/CMakeFiles/CMakeOutput.log".
+[1.025s] Invoked command in '/home/ros/ros2_ws/build/sllidar_ros2' returned '1': /usr/bin/cmake /home/ros/ros2_ws/src/sllidar_ros2 -DCMAKE_INSTALL_PREFIX=/home/ros/ros2_ws/install/sllidar_ros2

@@ -1,0 +1,2 @@
+Invoking command in '/root/ros_ws/build/sllidar_ros2': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /root/ros_ws/build/sllidar_ros2 -- -j4 -l4
+Invoked command in '/root/ros_ws/build/sllidar_ros2' returned '2': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /root/ros_ws/build/sllidar_ros2 -- -j4 -l4

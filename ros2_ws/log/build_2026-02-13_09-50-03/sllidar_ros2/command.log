@@ -1,0 +1,2 @@
+Invoking command in '/root/ros_ws/build/sllidar_ros2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/root/ros_ws/install/controller_pkg:/opt/ros/humble /usr/bin/cmake /root/ros_ws/src/sllidar_ros2 -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/root/ros_ws/install/sllidar_ros2
+Invoked command in '/root/ros_ws/build/sllidar_ros2' returned '1': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/root/ros_ws/install/controller_pkg:/opt/ros/humble /usr/bin/cmake /root/ros_ws/src/sllidar_ros2 -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/root/ros_ws/install/sllidar_ros2

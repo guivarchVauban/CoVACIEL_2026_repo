@@ -1,0 +1,2 @@
+[0mCMake Error: The current CMakeCache.txt directory /root/ros_ws/build/sllidar_ros2/CMakeCache.txt is different than the directory /home/ros/ros2_ws/build/sllidar_ros2 where CMakeCache.txt was created. This may result in binaries being created in the wrong place. If you are not sure, reedit the CMakeCache.txt[0m
+[0mCMake Error: The source "/root/ros_ws/src/sllidar_ros2/CMakeLists.txt" does not match the source "/home/ros/ros2_ws/src/sllidar_ros2/CMakeLists.txt" used to generate cache.  Re-run cmake with a different source directory.[0m

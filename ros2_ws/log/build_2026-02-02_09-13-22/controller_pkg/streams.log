@@ -1,0 +1,25 @@
+[0.572s] Invoking command in '/root/ros_ws/src/controller_pkg': PYTHONPATH=/root/ros_ws/build/controller_pkg/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/root/ros_ws/install/controller_pkg/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/controller_pkg build --build-base /root/ros_ws/build/controller_pkg/build install --record /root/ros_ws/build/controller_pkg/install.log --single-version-externally-managed install_data
+[0.769s] running egg_info
+[0.769s] writing ../../build/controller_pkg/controller_pkg.egg-info/PKG-INFO
+[0.770s] writing dependency_links to ../../build/controller_pkg/controller_pkg.egg-info/dependency_links.txt
+[0.771s] writing entry points to ../../build/controller_pkg/controller_pkg.egg-info/entry_points.txt
+[0.772s] writing requirements to ../../build/controller_pkg/controller_pkg.egg-info/requires.txt
+[0.772s] writing top-level names to ../../build/controller_pkg/controller_pkg.egg-info/top_level.txt
+[0.775s] reading manifest file '../../build/controller_pkg/controller_pkg.egg-info/SOURCES.txt'
+[0.776s] writing manifest file '../../build/controller_pkg/controller_pkg.egg-info/SOURCES.txt'
+[0.776s] running build
+[0.776s] running build_py
+[0.776s] copying controller_pkg/node_controller.py -> /root/ros_ws/build/controller_pkg/build/lib/controller_pkg
+[0.777s] running install
+[0.777s] running install_lib
+[0.778s] copying /root/ros_ws/build/controller_pkg/build/lib/controller_pkg/node_controller.py -> /root/ros_ws/install/controller_pkg/lib/python3.10/site-packages/controller_pkg
+[0.778s] byte-compiling /root/ros_ws/install/controller_pkg/lib/python3.10/site-packages/controller_pkg/node_controller.py to node_controller.cpython-310.pyc
+[0.779s] Sorry: TabError: inconsistent use of tabs and spaces in indentation (node_controller.py, line 20)
+[0.779s] running install_data
+[0.779s] running install_egg_info
+[0.782s] removing '/root/ros_ws/install/controller_pkg/lib/python3.10/site-packages/controller_pkg-0.0.0-py3.10.egg-info' (and everything under it)
+[0.783s] Copying ../../build/controller_pkg/controller_pkg.egg-info to /root/ros_ws/install/controller_pkg/lib/python3.10/site-packages/controller_pkg-0.0.0-py3.10.egg-info
+[0.783s] running install_scripts
+[0.806s] Installing node_controller script to /root/ros_ws/install/controller_pkg/lib/controller_pkg
+[0.807s] writing list of installed files to '/root/ros_ws/build/controller_pkg/install.log'
+[0.855s] Invoked command in '/root/ros_ws/src/controller_pkg' returned '0': PYTHONPATH=/root/ros_ws/build/controller_pkg/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/root/ros_ws/install/controller_pkg/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/controller_pkg build --build-base /root/ros_ws/build/controller_pkg/build install --record /root/ros_ws/build/controller_pkg/install.log --single-version-externally-managed install_data

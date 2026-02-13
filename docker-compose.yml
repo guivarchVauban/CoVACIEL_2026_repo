@@ -1,0 +1,16 @@
+services:
+  covaciel_lidar: #si ca casse tout ici c'etait lidar_robot avant
+    build: .
+    container_name: covaciel_lidar
+    privileged: true
+    network_mode: host
+    environment:
+      - ROS_DOMAIN_ID=67
+    volumes:
+      - /home/util/baptiste_docker/ros2_ws:/root/ros_ws #Copie le dossier /home/covaciel_docker/ros2_ws dans le container
+    devices:
+      - /dev/serial/by-id/usb-Silicon_Labs_CP2102N_USB_to_UART_Bridge_Controller_8c1d66cffae5ed11b378dca80b2af5ab-if00-port0:/dev/ttyUSB_LIDAR #Port du Lidar
+      - /dev/serial/by-id/usb-Arduino_LLC_Arduino_Nano_Every_C74741355154524C4A202020FF0F2E18-if00:/dev/ttyArduino #port de l'arduino en by-id pour être sur qu'il ne change jamais
+    stdin_open: true # -i
+    tty: true        # -t
+    restart: always
