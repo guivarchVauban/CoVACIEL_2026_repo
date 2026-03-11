@@ -1,0 +1,38 @@
+[2.155s] Invoking command in '/home/util/ros2_ws/src/nav_tunnel': PYTHONPATH=/home/util/ros2_ws/build/nav_tunnel/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/util/ros2_ws/install/nav_tunnel/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/nav_tunnel build --build-base /home/util/ros2_ws/build/nav_tunnel/build install --record /home/util/ros2_ws/build/nav_tunnel/install.log --single-version-externally-managed install_data
+[2.924s] running egg_info
+[2.925s] creating ../../build/nav_tunnel/nav_tunnel.egg-info
+[2.925s] writing ../../build/nav_tunnel/nav_tunnel.egg-info/PKG-INFO
+[2.930s] writing dependency_links to ../../build/nav_tunnel/nav_tunnel.egg-info/dependency_links.txt
+[2.931s] writing entry points to ../../build/nav_tunnel/nav_tunnel.egg-info/entry_points.txt
+[2.931s] writing requirements to ../../build/nav_tunnel/nav_tunnel.egg-info/requires.txt
+[2.931s] writing top-level names to ../../build/nav_tunnel/nav_tunnel.egg-info/top_level.txt
+[2.931s] writing manifest file '../../build/nav_tunnel/nav_tunnel.egg-info/SOURCES.txt'
+[2.934s] reading manifest file '../../build/nav_tunnel/nav_tunnel.egg-info/SOURCES.txt'
+[2.934s] adding license file 'LICENSE'
+[2.938s] writing manifest file '../../build/nav_tunnel/nav_tunnel.egg-info/SOURCES.txt'
+[2.938s] running build
+[2.938s] running build_py
+[2.938s] creating /home/util/ros2_ws/build/nav_tunnel/build
+[2.939s] creating /home/util/ros2_ws/build/nav_tunnel/build/lib
+[2.939s] creating /home/util/ros2_ws/build/nav_tunnel/build/lib/nav_tunnel
+[2.939s] copying nav_tunnel/__init__.py -> /home/util/ros2_ws/build/nav_tunnel/build/lib/nav_tunnel
+[2.941s] copying nav_tunnel/nav_tunnel.py -> /home/util/ros2_ws/build/nav_tunnel/build/lib/nav_tunnel
+[2.941s] running install
+[2.941s] running install_lib
+[2.943s] creating /home/util/ros2_ws/install/nav_tunnel/lib/python3.10/site-packages/nav_tunnel
+[2.945s] copying /home/util/ros2_ws/build/nav_tunnel/build/lib/nav_tunnel/__init__.py -> /home/util/ros2_ws/install/nav_tunnel/lib/python3.10/site-packages/nav_tunnel
+[2.946s] copying /home/util/ros2_ws/build/nav_tunnel/build/lib/nav_tunnel/nav_tunnel.py -> /home/util/ros2_ws/install/nav_tunnel/lib/python3.10/site-packages/nav_tunnel
+[2.946s] byte-compiling /home/util/ros2_ws/install/nav_tunnel/lib/python3.10/site-packages/nav_tunnel/__init__.py to __init__.cpython-310.pyc
+[2.947s] byte-compiling /home/util/ros2_ws/install/nav_tunnel/lib/python3.10/site-packages/nav_tunnel/nav_tunnel.py to nav_tunnel.cpython-310.pyc
+[2.951s] running install_data
+[2.952s] creating /home/util/ros2_ws/install/nav_tunnel/share/ament_index
+[2.952s] creating /home/util/ros2_ws/install/nav_tunnel/share/ament_index/resource_index
+[2.952s] creating /home/util/ros2_ws/install/nav_tunnel/share/ament_index/resource_index/packages
+[2.953s] copying resource/nav_tunnel -> /home/util/ros2_ws/install/nav_tunnel/share/ament_index/resource_index/packages
+[2.953s] copying package.xml -> /home/util/ros2_ws/install/nav_tunnel/share/nav_tunnel
+[2.953s] running install_egg_info
+[2.959s] Copying ../../build/nav_tunnel/nav_tunnel.egg-info to /home/util/ros2_ws/install/nav_tunnel/lib/python3.10/site-packages/nav_tunnel-0.0.0-py3.10.egg-info
+[2.963s] running install_scripts
+[3.030s] Installing nav_tunnel script to /home/util/ros2_ws/install/nav_tunnel/lib/nav_tunnel
+[3.031s] writing list of installed files to '/home/util/ros2_ws/build/nav_tunnel/install.log'
+[3.106s] Invoked command in '/home/util/ros2_ws/src/nav_tunnel' returned '0': PYTHONPATH=/home/util/ros2_ws/build/nav_tunnel/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/util/ros2_ws/install/nav_tunnel/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/nav_tunnel build --build-base /home/util/ros2_ws/build/nav_tunnel/build install --record /home/util/ros2_ws/build/nav_tunnel/install.log --single-version-externally-managed install_data

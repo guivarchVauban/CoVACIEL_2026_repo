@@ -1,0 +1,42 @@
+[0.000000] (-) TimerEvent: {}
+[0.001526] (nav_tunnel) JobQueued: {'identifier': 'nav_tunnel', 'dependencies': OrderedDict()}
+[0.001583] (nav_tunnel) JobStarted: {'identifier': 'nav_tunnel'}
+[0.101205] (-) TimerEvent: {}
+[0.202431] (-) TimerEvent: {}
+[0.305061] (-) TimerEvent: {}
+[0.405788] (-) TimerEvent: {}
+[0.507986] (-) TimerEvent: {}
+[0.608679] (-) TimerEvent: {}
+[0.709198] (-) TimerEvent: {}
+[0.809782] (-) TimerEvent: {}
+[0.910316] (-) TimerEvent: {}
+[1.010894] (-) TimerEvent: {}
+[1.111550] (-) TimerEvent: {}
+[1.212537] (-) TimerEvent: {}
+[1.313043] (-) TimerEvent: {}
+[1.377735] (nav_tunnel) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'develop', '--editable', '--build-directory', '/home/util/ros2_ws/build/nav_tunnel/build', '--no-deps', 'symlink_data'], 'cwd': '/home/util/ros2_ws/build/nav_tunnel', 'env': {'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'util', 'XDG_SESSION_TYPE': 'x11', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib', 'HOME': '/home/util', 'OLDPWD': '/home/util/ros2_ws/src', 'DESKTOP_SESSION': 'ubuntu', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'MANAGERPID': '2582', 'DBUS_STARTER_BUS_TYPE': 'session', 'SYSTEMD_EXEC_PID': '2832', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus,guid=d12edf09307bedbff9f6818d69a53a56', 'COLORTERM': 'truecolor', 'ROS_DISTRO': 'humble', 'GTK_IM_MODULE': 'ibus', 'LOGNAME': 'util', 'JOURNAL_STREAM': '8:12111', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'util', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', 'ROS_LOCALHOST_ONLY': '0', 'WINDOWPATH': '2', 'PATH': '/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin', 'SESSION_MANAGER': 'local/util-VirtualBox:@/tmp/.ICE-unix/2832,unix/util-VirtualBox:/tmp/.ICE-unix/2832', 'INVOCATION_ID': '4f0e686d6ee94e81b90e391cf75b6a06', 'XDG_MENU_PREFIX': 'gnome-', 'XDG_RUNTIME_DIR': '/run/user/1000', 'DISPLAY': ':1', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'TILIX_ID': 'f04381ab-aa33-4950-992e-b75605844eaa', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/gdm/Xauthority', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:', 'SSH_AGENT_LAUNCHER': 'gnome-keyring', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'ROS_DOMAIN_ID': '42', 'AMENT_PREFIX_PATH': '/opt/ros/humble', 'SHELL': '/bin/bash', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'GPG_AGENT_INFO': '/run/user/1000/gnupg/S.gpg-agent:0:1', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/util/ros2_ws/build/nav_tunnel', 'LC_ALL': 'en_US.UTF-8', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'DBUS_STARTER_ADDRESS': 'unix:path=/run/user/1000/bus,guid=d12edf09307bedbff9f6818d69a53a56', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/share/gnome:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/util/ros2_ws/build/nav_tunnel/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/util/ros2_ws/install/nav_tunnel/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'COLCON': '1', 'VTE_VERSION': '6800'}, 'shell': False}
+[1.413621] (-) TimerEvent: {}
+[1.514487] (-) TimerEvent: {}
+[1.614945] (-) TimerEvent: {}
+[1.715473] (-) TimerEvent: {}
+[1.771745] (nav_tunnel) StdoutLine: {'line': b'running develop\n'}
+[1.815610] (-) TimerEvent: {}
+[1.916106] (-) TimerEvent: {}
+[2.006045] (nav_tunnel) StdoutLine: {'line': b'running egg_info\n'}
+[2.006243] (nav_tunnel) StdoutLine: {'line': b'writing nav_tunnel.egg-info/PKG-INFO\n'}
+[2.006329] (nav_tunnel) StdoutLine: {'line': b'writing dependency_links to nav_tunnel.egg-info/dependency_links.txt\n'}
+[2.006545] (nav_tunnel) StdoutLine: {'line': b'writing entry points to nav_tunnel.egg-info/entry_points.txt\n'}
+[2.006651] (nav_tunnel) StdoutLine: {'line': b'writing requirements to nav_tunnel.egg-info/requires.txt\n'}
+[2.006930] (nav_tunnel) StdoutLine: {'line': b'writing top-level names to nav_tunnel.egg-info/top_level.txt\n'}
+[2.010629] (nav_tunnel) StdoutLine: {'line': b"reading manifest file 'nav_tunnel.egg-info/SOURCES.txt'\n"}
+[2.015209] (nav_tunnel) StdoutLine: {'line': b"writing manifest file 'nav_tunnel.egg-info/SOURCES.txt'\n"}
+[2.016515] (-) TimerEvent: {}
+[2.017101] (nav_tunnel) StdoutLine: {'line': b'running build_ext\n'}
+[2.017271] (nav_tunnel) StdoutLine: {'line': b'Creating /home/util/ros2_ws/install/nav_tunnel/lib/python3.10/site-packages/nav-tunnel.egg-link (link to .)\n'}
+[2.018587] (nav_tunnel) StdoutLine: {'line': b'Installing nav_tunnel script to /home/util/ros2_ws/install/nav_tunnel/lib/nav_tunnel\n'}
+[2.018969] (nav_tunnel) StdoutLine: {'line': b'\n'}
+[2.019083] (nav_tunnel) StdoutLine: {'line': b'Installed /home/util/ros2_ws/build/nav_tunnel\n'}
+[2.019154] (nav_tunnel) StdoutLine: {'line': b'running symlink_data\n'}
+[2.071534] (nav_tunnel) CommandEnded: {'returncode': 0}
+[2.111207] (nav_tunnel) JobEnded: {'identifier': 'nav_tunnel', 'rc': 0}
+[2.112360] (-) EventReactorShutdown: {}
