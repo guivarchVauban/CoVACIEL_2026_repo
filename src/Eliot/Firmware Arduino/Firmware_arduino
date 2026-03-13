@@ -1,0 +1,324 @@
+/**
+ * @file firmware_2positions.ino
+ * @author Eliot
+ * @brief Pilotage bas niveau + Servo 2 positions + Capteurs IR
+ * @version 3.1 (Optimisé pour détection contresens Covaciel - 2 positions)
+ */
+ 
+#include <Wire.h>
+#include <PCA9685.h>
+#define DEBUG 1
+PCA9685 pwmController;
+
+
+// Variables de pilotage (données reçues de la Raspberry)
+byte vRecu = 50, dRecu = 50;
+byte ancienneVitesse = 50;
+
+
+// --- MÉMOIRES ANTI-SPAM I2C ---
+int lastPwmMoteur = -1;
+int lastPwmDirection = -1;
+int lastPwmServo = -1;
+
+
+// Variables pour la marche arrière
+unsigned long chronoAR = 0;
+int etapeAR = 0;
+
+
+// Variables pour le boost avant
+unsigned long chronoAV = 0;
+bool enKickstartAV = false;
+
+
+// --- VARIABLES SERVO CAMÉRA (2 POSITIONS) ---
+unsigned long chronoServo = 0;
+int etapeServo = 0;
+bool servoActif = true;
+int angleServoActuel = 45;  // Commence à gauche
+
+
+// Durée à chaque position (2 secondes)
+const unsigned long DUREE_POSITION_SERVO = 1250;
+
+
+// --- VARIABLES CAPTEURS IR ---
+const int PIN_IR_GAUCHE = A0;
+const int PIN_IR_DROIT = A2;
+byte valeurIR_Gauche = 0;
+byte valeurIR_Droit = 0;
+
+
+// --- VARIABLES TRANSMISSION VERS RASPBERRY ---
+unsigned long chronoTransmission = 0;
+const unsigned long INTERVALLE_TRANSMISSION = 50;  // 20Hz
+
+
+/**
+ * @brief N'envoie le signal au PCA9685 que si la valeur a changé
+ */
+void updateMoteur(int pwmValue) {
+    if (pwmValue != lastPwmMoteur) {
+        pwmController.setChannelPWM(1, pwmValue);
+        lastPwmMoteur = pwmValue;
+    }
+}
+
+
+/**
+ * @brief N'envoie le signal au PCA9685 que si la direction a changé
+ */
+void updateDirection(int pwmValue) {
+    if (pwmValue != lastPwmDirection) {
+        pwmController.setChannelPWM(0, pwmValue);
+        lastPwmDirection = pwmValue;
+    }
+}
+
+
+/**
+ * @brief N'envoie le signal au servo que si l'angle a changé
+ */
+void updateServo(int angleDegres) {
+    angleServoActuel = angleDegres;
+   
+    // Conversion angle vers PWM pour servo standard
+    int pwmValue = map(angleDegres, 0, 180, 150, 600);
+   
+    if (pwmValue != lastPwmServo) {
+        pwmController.setChannelPWM(2, pwmValue);
+        lastPwmServo = pwmValue;
+    }
+}
+
+
+void setup() {
+    Serial.begin(115200);
+    Wire.begin();
+    pwmController.resetDevices();
+    pwmController.init();
+    pwmController.setPWMFrequency(50);
+   
+    // Initialisation au neutre absolu
+    updateMoteur(307);
+    updateDirection(338);
+   
+    // Initialisation servo à 45° (gauche-avant)
+    updateServo(45);
+    chronoServo = millis();
+   
+    // Configuration pins IR
+    pinMode(PIN_IR_GAUCHE, INPUT);
+    pinMode(PIN_IR_DROIT, INPUT);
+   
+    chronoTransmission = millis();
+}
+
+
+void loop() {
+    // --------------------------------------------------------
+    // ÉTAPE 1 : LECTURE DU FLUX SÉRIE (cmd_vel)
+    // --------------------------------------------------------
+    if (Serial.available() >= 4) {
+        if (Serial.read() == 0xFF) {
+            byte v = Serial.read();  
+            byte d = Serial.read();  
+            byte cs = Serial.read();
+
+
+            if (cs == (byte)(v + d)) {
+                vRecu = v;
+                dRecu = d;
+
+
+                // Mise à jour direction
+                int pwmDir = map(dRecu, 0, 100, 388, 288);
+                updateDirection(pwmDir);
+
+
+                // Détection kickstart avant
+                if (vRecu > 50 && ancienneVitesse <= 50) {
+                    enKickstartAV = true;
+                    chronoAV = millis();
+                    etapeAR = 0;
+                }
+               
+                ancienneVitesse = vRecu;
+            } else {
+              if(DEBUG) Serial.println("Mauvais CRC");
+            }
+        }
+    }
+
+
+    // --------------------------------------------------------
+    // ÉTAPE 2 : EXÉCUTION CONTINUE DES MOTEURS
+    // --------------------------------------------------------
+    if (vRecu > 50) {
+        // MARCHE AVANT
+        if (enKickstartAV) {
+            updateMoteur(380);
+            if (millis() - chronoAV >= 75) {
+                enKickstartAV = false;
+            }
+        } else {
+            int pwmCibleAV = map(vRecu, 51, 100, 325, 410);
+            updateMoteur(pwmCibleAV);
+        }
+    }
+    else if (vRecu == 50) {
+        // NEUTRE
+        updateMoteur(307);
+        enKickstartAV = false;
+        etapeAR = 0;
+    }
+    else if (vRecu < 50) {
+        // MARCHE ARRIÈRE
+        gestionMarcheArriere();
+    }
+
+
+    // --------------------------------------------------------
+    // ÉTAPE 3 : GESTION SERVO CAMÉRA (2 POSITIONS)
+    // --------------------------------------------------------
+    gestionServoCamera();
+
+
+    // --------------------------------------------------------
+    // ÉTAPE 4 : LECTURE CAPTEURS IR
+    // --------------------------------------------------------
+    lectureCapteurs();
+
+
+    // --------------------------------------------------------
+    // ÉTAPE 5 : TRANSMISSION VERS RASPBERRY
+    // --------------------------------------------------------
+    transmissionVersRaspberry();
+}
+
+
+/**
+ * @brief Machine à états non-bloquante pour la marche arrière
+ */
+void gestionMarcheArriere() {
+    unsigned long m = millis();
+    int pwmCibleAR = map(vRecu, 0, 49, 220, 285);
+
+
+    switch (etapeAR) {
+        case 0:
+            updateMoteur(205);
+            chronoAR = m;
+            etapeAR = 1;
+            break;
+           
+        case 1:
+            if (m - chronoAR >= 350) {
+                updateMoteur(307);
+                chronoAR = m;
+                etapeAR = 2;
+            }
+            break;
+           
+        case 2:
+            if (m - chronoAR >= 350) {
+                updateMoteur(220);
+                chronoAR = m;
+                etapeAR = 3;
+            }
+            break;
+           
+        case 3:
+            if (m - chronoAR >= 100) {
+                updateMoteur(pwmCibleAR);
+                etapeAR = 4;
+            }
+            break;
+           
+        case 4:
+            updateMoteur(pwmCibleAR);
+            break;
+    }
+}
+
+
+/**
+ * @brief OPTIMISÉ : Balayage 2 positions pour détection contresens Covaciel
+ * Cycle : 45° (mur gauche rouge) <-> 135° (mur droit vert)
+ * Période : 4 secondes (2s par position)
+ */
+void gestionServoCamera() {
+    if (!servoActif) return;
+   
+    unsigned long m = millis();
+   
+    if (m - chronoServo >= DUREE_POSITION_SERVO) {
+        // Toggle entre 0 et 1
+        etapeServo = (etapeServo == 0) ? 1 : 0;
+       
+        switch (etapeServo) {
+            case 0:
+                updateServo(45);  // Gauche-avant (mur rouge)
+                if(DEBUG) Serial.println("Servo: 45° (GAUCHE)");
+                break;
+            case 1:
+                updateServo(135);  // Droite-avant (mur vert)
+                if(DEBUG) Serial.println("Servo: 135° (DROITE)");
+                break;
+        }
+       
+        chronoServo = m;
+    }
+}
+
+
+/**
+ * @brief Lit les capteurs IR (On garde la précision 10 bits pour le UInt16)
+ */
+void lectureCapteurs() {
+    // On ne fait plus ">> 2", on garde la valeur brute 0-1023
+    int rawG = analogRead(PIN_IR_GAUCHE);
+    int rawD = analogRead(PIN_IR_DROIT);
+   
+    // On stocke dans des ints pour pas perdre les bits de poids fort
+    valeurIR_Gauche = rawG;
+    valeurIR_Droit = rawD;
+}
+
+
+/**
+ * @brief Envoie les données (IR 16 bits + Servo) à la Raspberry Pi
+ * Format: [0xDD, IG_H, IG_L, ID_H, ID_L, Angle, Checksum] = 7 octets
+ */
+void transmissionVersRaspberry() {
+    unsigned long m = millis();
+   
+    if (m - chronoTransmission >= INTERVALLE_TRANSMISSION) {
+        // Découpage des int (16 bits) en 2 bytes (8 bits)
+        byte ig_h = (valeurIR_Gauche >> 8) & 0xFF;
+        byte ig_l = valeurIR_Gauche & 0xFF;
+        byte id_h = (valeurIR_Droit >> 8) & 0xFF;
+        byte id_l = valeurIR_Droit & 0xFF;
+        byte angle = (byte)angleServoActuel;
+
+
+        // Calcul du checksum sur les 5 octets de données
+        byte checksum = (byte)(ig_h + ig_l + id_h + id_l + angle);
+       
+        Serial.write(0xDD);   // Header
+        Serial.write(ig_h);   // IR Gauche High
+        Serial.write(ig_l);   // IR Gauche Low
+        Serial.write(id_h);   // IR Droit High
+        Serial.write(id_l);   // IR Droit Low
+        Serial.write(angle);  // Angle
+        Serial.write(checksum);
+       
+        chronoTransmission = m;
+    }
+}
+
+
+
+
+
