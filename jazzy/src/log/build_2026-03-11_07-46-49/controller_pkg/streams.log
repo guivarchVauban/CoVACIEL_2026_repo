@@ -1,0 +1,43 @@
+[0.991s] Invoking command in '/root/ros_ws/src/controller_pkg': PYTHONPATH=/root/ros_ws/src/build/controller_pkg/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/root/ros_ws/src/install/controller_pkg/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/controller_pkg build --build-base /root/ros_ws/src/build/controller_pkg/build install --record /root/ros_ws/src/build/controller_pkg/install.log --single-version-externally-managed install_data
+[1.240s] running egg_info
+[1.241s] creating ../build/controller_pkg/controller_pkg.egg-info
+[1.255s] writing ../build/controller_pkg/controller_pkg.egg-info/PKG-INFO
+[1.255s] writing dependency_links to ../build/controller_pkg/controller_pkg.egg-info/dependency_links.txt
+[1.255s] writing entry points to ../build/controller_pkg/controller_pkg.egg-info/entry_points.txt
+[1.255s] writing requirements to ../build/controller_pkg/controller_pkg.egg-info/requires.txt
+[1.255s] writing top-level names to ../build/controller_pkg/controller_pkg.egg-info/top_level.txt
+[1.255s] writing manifest file '../build/controller_pkg/controller_pkg.egg-info/SOURCES.txt'
+[1.284s] reading manifest file '../build/controller_pkg/controller_pkg.egg-info/SOURCES.txt'
+[1.285s] writing manifest file '../build/controller_pkg/controller_pkg.egg-info/SOURCES.txt'
+[1.285s] running build
+[1.285s] running build_py
+[1.285s] creating /root/ros_ws/src/build/controller_pkg/build
+[1.285s] creating /root/ros_ws/src/build/controller_pkg/build/lib
+[1.285s] creating /root/ros_ws/src/build/controller_pkg/build/lib/controller_pkg
+[1.286s] copying controller_pkg/__init__.py -> /root/ros_ws/src/build/controller_pkg/build/lib/controller_pkg
+[1.286s] copying controller_pkg/node_controller.py -> /root/ros_ws/src/build/controller_pkg/build/lib/controller_pkg
+[1.286s] copying controller_pkg/node_controllerFONCTIONEL.py -> /root/ros_ws/src/build/controller_pkg/build/lib/controller_pkg
+[1.286s] copying controller_pkg/node_controller_ANCIEN.py -> /root/ros_ws/src/build/controller_pkg/build/lib/controller_pkg
+[1.287s] running install
+[1.295s] running install_lib
+[1.310s] creating /root/ros_ws/src/install/controller_pkg/lib/python3.12/site-packages/controller_pkg
+[1.310s] copying /root/ros_ws/src/build/controller_pkg/build/lib/controller_pkg/__init__.py -> /root/ros_ws/src/install/controller_pkg/lib/python3.12/site-packages/controller_pkg
+[1.310s] copying /root/ros_ws/src/build/controller_pkg/build/lib/controller_pkg/node_controller.py -> /root/ros_ws/src/install/controller_pkg/lib/python3.12/site-packages/controller_pkg
+[1.310s] copying /root/ros_ws/src/build/controller_pkg/build/lib/controller_pkg/node_controllerFONCTIONEL.py -> /root/ros_ws/src/install/controller_pkg/lib/python3.12/site-packages/controller_pkg
+[1.311s] copying /root/ros_ws/src/build/controller_pkg/build/lib/controller_pkg/node_controller_ANCIEN.py -> /root/ros_ws/src/install/controller_pkg/lib/python3.12/site-packages/controller_pkg
+[1.313s] byte-compiling /root/ros_ws/src/install/controller_pkg/lib/python3.12/site-packages/controller_pkg/__init__.py to __init__.cpython-312.pyc
+[1.313s] byte-compiling /root/ros_ws/src/install/controller_pkg/lib/python3.12/site-packages/controller_pkg/node_controller.py to node_controller.cpython-312.pyc
+[1.313s] byte-compiling /root/ros_ws/src/install/controller_pkg/lib/python3.12/site-packages/controller_pkg/node_controllerFONCTIONEL.py to node_controllerFONCTIONEL.cpython-312.pyc
+[1.314s] byte-compiling /root/ros_ws/src/install/controller_pkg/lib/python3.12/site-packages/controller_pkg/node_controller_ANCIEN.py to node_controller_ANCIEN.cpython-312.pyc
+[1.315s] running install_data
+[1.315s] creating /root/ros_ws/src/install/controller_pkg/share/ament_index
+[1.315s] creating /root/ros_ws/src/install/controller_pkg/share/ament_index/resource_index
+[1.315s] creating /root/ros_ws/src/install/controller_pkg/share/ament_index/resource_index/packages
+[1.316s] copying resource/controller_pkg -> /root/ros_ws/src/install/controller_pkg/share/ament_index/resource_index/packages
+[1.316s] copying package.xml -> /root/ros_ws/src/install/controller_pkg/share/controller_pkg
+[1.316s] running install_egg_info
+[1.332s] Copying ../build/controller_pkg/controller_pkg.egg-info to /root/ros_ws/src/install/controller_pkg/lib/python3.12/site-packages/controller_pkg-0.0.0-py3.12.egg-info
+[1.333s] running install_scripts
+[1.439s] Installing node_controller script to /root/ros_ws/src/install/controller_pkg/lib/controller_pkg
+[1.439s] writing list of installed files to '/root/ros_ws/src/build/controller_pkg/install.log'
+[1.503s] Invoked command in '/root/ros_ws/src/controller_pkg' returned '0': PYTHONPATH=/root/ros_ws/src/build/controller_pkg/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/root/ros_ws/src/install/controller_pkg/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/controller_pkg build --build-base /root/ros_ws/src/build/controller_pkg/build install --record /root/ros_ws/src/build/controller_pkg/install.log --single-version-externally-managed install_data

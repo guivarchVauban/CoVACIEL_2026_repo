@@ -1,0 +1,2 @@
+[console_scripts]
+node_controller = controller_pkg.node_controller:main
