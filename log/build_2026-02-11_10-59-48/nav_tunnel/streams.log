@@ -1,0 +1,17 @@
+[1.272s] Invoking command in '/home/util/ros2_ws/build/nav_tunnel': PYTHONPATH=/home/util/ros2_ws/build/nav_tunnel/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/util/ros2_ws/install/nav_tunnel/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/util/ros2_ws/build/nav_tunnel/build --no-deps symlink_data
+[1.923s] running develop
+[2.260s] running egg_info
+[2.260s] writing nav_tunnel.egg-info/PKG-INFO
+[2.261s] writing dependency_links to nav_tunnel.egg-info/dependency_links.txt
+[2.261s] writing entry points to nav_tunnel.egg-info/entry_points.txt
+[2.261s] writing requirements to nav_tunnel.egg-info/requires.txt
+[2.262s] writing top-level names to nav_tunnel.egg-info/top_level.txt
+[2.264s] reading manifest file 'nav_tunnel.egg-info/SOURCES.txt'
+[2.266s] writing manifest file 'nav_tunnel.egg-info/SOURCES.txt'
+[2.269s] running build_ext
+[2.269s] Creating /home/util/ros2_ws/install/nav_tunnel/lib/python3.10/site-packages/nav-tunnel.egg-link (link to .)
+[2.274s] Installing nav_tunnel script to /home/util/ros2_ws/install/nav_tunnel/lib/nav_tunnel
+[2.274s] 
+[2.274s] Installed /home/util/ros2_ws/build/nav_tunnel
+[2.274s] running symlink_data
+[2.328s] Invoked command in '/home/util/ros2_ws/build/nav_tunnel' returned '0': PYTHONPATH=/home/util/ros2_ws/build/nav_tunnel/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/util/ros2_ws/install/nav_tunnel/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/util/ros2_ws/build/nav_tunnel/build --no-deps symlink_data
