@@ -1,3 +1,0 @@
-[console_scripts]
-nav_tunnel = nav_tunnel.nav_tunnel:main
-
