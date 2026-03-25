@@ -1,0 +1,196 @@
+#!/usr/bin/env python3
+"""
+node_controller.py — Covaciel v4.1
+Parse la trame Arduino 19 bytes et publie :
+  /ir_gauche          std_msgs/Float32           (m)
+  /ir_droit           std_msgs/Float32           (m)
+  /servo_angle        std_msgs/Int32             (degrés)
+  /imu/data           sensor_msgs/Imu            (accéléro m/s² + gyro rad/s)
+ 
+Reçoit :
+  /course_active      std_msgs/Bool
+  /obstacle_arriere   std_msgs/Bool
+  /cmd_vel            geometry_msgs/Twist  → envoyé à l'Arduino (4 bytes)
+"""
+ 
+import math
+import struct
+import serial
+import rclpy
+from rclpy.node import Node
+from std_msgs.msg import Float32, Bool, Int32
+from geometry_msgs.msg import Twist
+from sensor_msgs.msg import Imu
+ 
+# ── Protocole série ───────────────────────────────────────────────────────────
+PACKET_SIZE = 19
+HEADER      = 0xAA
+SERIAL_PORT = '/dev/ttyArduino'
+BAUD_RATE   = 115200
+ 
+# ── Facteurs de conversion IMU ────────────────────────────────────────────────
+# ICM20600 config par défaut firmware : ±2g, ±250°/s
+ACC_SCALE  = 9.81 / 16384.0              # LSB → m/s²
+GYRO_SCALE = math.pi / (131.0 * 180.0)  # LSB → rad/s
+ 
+# Covariances diagonales (affiner après calibration terrain)
+ACC_VAR    = (0.01 * 9.81) ** 2
+GYRO_VAR   = (0.01 * math.pi / 180.0) ** 2
+ 
+ 
+class ControllerNode(Node):
+    def __init__(self):
+        super().__init__('node_controller')
+ 
+        # ── Publishers ────────────────────────────────────────────────────────
+        self.pub_ir_g  = self.create_publisher(Float32, '/ir_gauche',   10)
+        self.pub_ir_d  = self.create_publisher(Float32, '/ir_droit',    10)
+        self.pub_servo = self.create_publisher(Int32,   '/servo_angle', 10)
+        self.pub_imu   = self.create_publisher(Imu,     '/imu/data',    10)
+ 
+        # ── Subscribers ───────────────────────────────────────────────────────
+        self.course_active    = False
+        self.obstacle_arriere = False
+        self.create_subscription(Bool,  '/course_active',    self._cb_course,   10)
+        self.create_subscription(Bool,  '/obstacle_arriere', self._cb_obstacle, 10)
+        self.create_subscription(Twist, '/cmd_vel',          self._cb_cmd_vel,  10)
+ 
+        # ── Port série ────────────────────────────────────────────────────────
+        try:
+            self.ser = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=0.1)
+            self.get_logger().info(f'Série ouverte : {SERIAL_PORT}')
+        except serial.SerialException as e:
+            self.get_logger().error(f'Erreur série : {e}')
+            self.ser = None
+ 
+        self._buf = bytearray()
+        self.create_timer(0.005, self._read_serial)  # 200 Hz (IMU à 100 Hz Arduino)
+ 
+    # ── Callbacks ─────────────────────────────────────────────────────────────
+    def _cb_course(self, msg: Bool):
+        self.course_active = msg.data
+ 
+    def _cb_obstacle(self, msg: Bool):
+        self.obstacle_arriere = msg.data
+ 
+    def _cb_cmd_vel(self, msg: Twist):
+        """
+        Convertit cmd_vel en trame 4 bytes vers l'Arduino :
+        [0xFF] [vitesse 0-100] [direction 0-100] [checksum]
+        vitesse : 50 = neutre, >50 = avant, <50 = arrière
+        direction : 50 = tout droit, <50 = gauche, >50 = droite
+        """
+        if self.ser is None:
+            return
+ 
+        # linear.x : -1.0..1.0 → 0..100
+        v = int(50 + msg.linear.x * 50)
+        v = max(0, min(100, v))
+ 
+        # angular.z : -1.0..1.0 → 100..0 (inversé : z>0 = gauche)
+        d = int(50 - msg.angular.z * 50)
+        d = max(0, min(100, d))
+ 
+        cs = (v + d) & 0xFF
+        self.ser.write(bytes([0xFF, v, d, cs]))
+ 
+    # ── Lecture série ─────────────────────────────────────────────────────────
+    def _read_serial(self):
+        if self.ser is None or not self.ser.is_open:
+            return
+ 
+        waiting = self.ser.in_waiting
+        if waiting:
+            self._buf.extend(self.ser.read(waiting))
+ 
+        while len(self._buf) >= PACKET_SIZE:
+            idx = self._buf.find(HEADER)
+            if idx == -1:
+                self._buf.clear()
+                return
+            if idx > 0:
+                self._buf = self._buf[idx:]
+ 
+            if len(self._buf) < PACKET_SIZE:
+                break
+ 
+            pkt = self._buf[:PACKET_SIZE]
+ 
+            # Checksum XOR bytes 1..17
+            cs = 0
+            for b in pkt[1:18]:
+                cs ^= b
+            if cs != pkt[18]:
+                self.get_logger().warning('Checksum invalide — resync')
+                self._buf = self._buf[1:]
+                continue
+ 
+            self._buf = self._buf[PACKET_SIZE:]
+            self._parse_and_publish(pkt)
+ 
+    def _parse_and_publish(self, pkt: bytes):
+        now = self.get_clock().now().to_msg()
+ 
+        # ── IR ────────────────────────────────────────────────────────────────
+        ir_g_raw = (pkt[1] << 8) | pkt[2]
+        ir_d_raw = (pkt[3] << 8) | pkt[4]
+ 
+        def ir_to_m(raw):
+            if raw <= 20:
+                return 3.5  # valeur neutre si hors plage
+            return (48000.0 / (raw - 20)) / 100.0
+ 
+        msg_irg = Float32(); msg_irg.data = ir_to_m(ir_g_raw)
+        msg_ird = Float32(); msg_ird.data = ir_to_m(ir_d_raw)
+        self.pub_ir_g.publish(msg_irg)
+        self.pub_ir_d.publish(msg_ird)
+ 
+        # ── Angle servo ───────────────────────────────────────────────────────
+        msg_servo = Int32(); msg_servo.data = int(pkt[5])
+        self.pub_servo.publish(msg_servo)
+ 
+        # ── IMU (int16 big-endian) ────────────────────────────────────────────
+        ax, ay, az = struct.unpack_from('>hhh', pkt, 6)
+        gx, gy, gz = struct.unpack_from('>hhh', pkt, 12)
+ 
+        imu_msg = Imu()
+        imu_msg.header.stamp    = now
+        imu_msg.header.frame_id = 'imu_link'
+ 
+        # Orientation non calculée côté Arduino → indiquer aux consumers SLAM
+        imu_msg.orientation_covariance[0] = -1.0
+ 
+        imu_msg.linear_acceleration.x = ax * ACC_SCALE
+        imu_msg.linear_acceleration.y = ay * ACC_SCALE
+        imu_msg.linear_acceleration.z = az * ACC_SCALE
+        imu_msg.linear_acceleration_covariance[0] = ACC_VAR
+        imu_msg.linear_acceleration_covariance[4] = ACC_VAR
+        imu_msg.linear_acceleration_covariance[8] = ACC_VAR
+ 
+        imu_msg.angular_velocity.x = gx * GYRO_SCALE
+        imu_msg.angular_velocity.y = gy * GYRO_SCALE
+        imu_msg.angular_velocity.z = gz * GYRO_SCALE
+        imu_msg.angular_velocity_covariance[0] = GYRO_VAR
+        imu_msg.angular_velocity_covariance[4] = GYRO_VAR
+        imu_msg.angular_velocity_covariance[8] = GYRO_VAR
+ 
+        self.pub_imu.publish(imu_msg)
+ 
+ 
+def main(args=None):
+    rclpy.init(args=args)
+    node = ControllerNode()
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        if node.ser and node.ser.is_open:
+            node.ser.close()
+        node.destroy_node()
+        rclpy.shutdown()
+ 
+ 
+if __name__ == '__main__':
+    main()
+ 
