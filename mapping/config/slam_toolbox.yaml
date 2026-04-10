@@ -1,0 +1,32 @@
+slam_toolbox:
+  ros__parameters:
+    solver_plugin: solver_plugins::CeresSolver
+    ceres_linear_solver: SPARSE_NORMAL_CHOLESKY
+    ceres_preconditioner: SCHUR_JACOBI
+    ceres_trust_strategy: LEVENBERG_MARQUARDT
+    ceres_dogleg_type: TRADITIONAL_DOGLEG
+    ceres_loss_function: None
+
+    odom_frame: odom
+    map_frame: map
+    base_frame: base_link
+    scan_topic: /scan
+    use_scan_matching: true
+    use_scan_barycenter: true
+
+    max_laser_range: 3.0             # <--- IL NE DESSINE QUE LA PISTE
+    resolution: 0.05
+    map_update_interval: 2.0         # <--- MOINS DE LAG D'AFFICHAGE (toutes les 2 sec)
+    minimum_travel_distance: 0.20
+    minimum_travel_heading: 0.20
+    transform_timeout: 0.5
+    tf_buffer_duration: 30.0
+    stack_size_to_use: 40000000
+
+    enable_interactive_mode: false
+    do_loop_closing: true
+    loop_search_maximum_distance: 6.0
+    loop_match_minimum_chain_size: 3
+    loop_match_maximum_variance_covariance: 3.0
+    loop_match_minimum_response_coarse: 0.15
+    loop_match_minimum_response_fine: 0.20

@@ -1,0 +1,18 @@
+kiss_icp_node:
+  ros__parameters:
+    use_sim_time: false
+    lidar_odom_frame: "odom"
+    base_frame: "base_link"
+    publish_odom_tf: false         # <--- IL REPREND LE CONTRÔLE TOTAL
+    
+    data:
+      max_range: 15.0             # <--- IL REGARDE TRÈS LOIN POUR S'ANCRER
+      min_range: 0.15
+      deskew: false
+
+    mapping:
+      voxel_size: 0.10            # <--- 0.10 AU LIEU DE 0.05 POUR SOULAGER LA RASPBERRY PI
+
+    adaptive_threshold:
+      min_motion_th: 0.02
+
