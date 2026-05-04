@@ -48,4 +48,4 @@ Lien du Google Drive : https://drive.google.com/drive/folders/1ua3N70ncl6qyzg5IN
 
 ## IP de la raspberryPI
 
-# 172.25.28.13/24
+# 172.25.28.23/24
