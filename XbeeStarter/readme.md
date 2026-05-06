@@ -14,10 +14,10 @@
 
 *Le message envoyé en broadcast par le XBEE lors du top départ est composé des 4 caractères ASCII suivants: $GO; . Un autre message envoyé également en broadcast par le XBEE permet d'arrêter les voitures. Ce message d'arrêt des voitures est composé des 4 caractères ASCII suivants: STOP .*
 
-# Ce dossier contient :
+## Ce dossier contient :
 
-## Le programme Arduino du simulateur de Top départ Xbee
+### Le programme Arduino du simulateur de Top départ Xbee
 A modifier pour que le Top départ et le Stop se lancent en fonction d'appui sur des boutons lumineux
 
-## Les configurations XCTU pour les modules XBee
+### Les configurations XCTU pour les modules XBee
 Configuration conforme au réglement du concours Covaciel
