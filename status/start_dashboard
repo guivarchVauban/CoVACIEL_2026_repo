@@ -1,0 +1,13 @@
+#!/bin/bash
+CONTAINER="covaciel_jazzy"
+SCRIPT="/root/dashboard.py"
+
+echo "[dashboard] Démarrage..."
+
+while true; do
+    sudo docker exec -it "$CONTAINER" bash -c \
+        "source /opt/ros/jazzy/setup.bash && export ROS_DOMAIN_ID=67 && python3 $SCRIPT"
+
+    echo "[dashboard] Crash ou arrêt détecté, redémarrage dans 3s..."
+    sleep 3
+done
