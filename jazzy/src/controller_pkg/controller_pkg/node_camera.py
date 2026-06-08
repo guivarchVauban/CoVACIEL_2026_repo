@@ -1,195 +1,216 @@
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import UInt8, Bool, String
+from std_msgs.msg import Bool, String
 import cv2
 import numpy as np
 import threading
 import time
 
+# --- MODE DEBUG ---
+DEBUG      = True
+MJPEG_PORT = 8081
 
-# --- PLAGES HSV ---
-VERT_BAS  = np.array([45,  100,  60])
-VERT_HAUT = np.array([75, 255, 255])
+# --- PLAGES HSV ÉLARGIES (Spécial caméra à exposition automatique) ---
+VERT_BAS  = np.array([35,  50,  40])  
+VERT_HAUT = np.array([85, 255, 255])
 
-ROUGE_BAS_1  = np.array([0,   140, 80])
-ROUGE_HAUT_1 = np.array([8,  255, 255])
-ROUGE_BAS_2  = np.array([172, 140, 80])
+ROUGE_BAS_1  = np.array([0,   70,  50])
+ROUGE_HAUT_1 = np.array([10,  255, 255])
+ROUGE_BAS_2  = np.array([170, 70,  50])
 ROUGE_HAUT_2 = np.array([180, 255, 255])
 
-# Seuil minimum de pixels detectes pour valider une couleur
-SEUIL_PIXELS = 500
+SEUIL_PIXELS_CONFIDENCE = 1500
 
-# Angles servo
-ANGLE_DROITE = 135
-ANGLE_GAUCHE = 45
-ANGLE_CENTRE = 90
-TOLERANCE_ANGLE = 5
-
-# Ordre de scan des index camera (video0 en priorite car mappe dans Docker)
 CAMERA_INDICES = [0, 1, 2, 4, 6, 8, 10]
+
+# Noyau pour nettoyer le bruit (Fermeture des micros-trous dans les masques)
+KERNEL = np.ones((5, 5), np.uint8)
+
+# ------------------------------------------------------------------
+# SERVEUR MJPEG (DEBUG)
+# ------------------------------------------------------------------
+if DEBUG:
+    from http.server import BaseHTTPRequestHandler, HTTPServer
+
+    _debug_frame_lock = threading.Lock()
+    _debug_frame      = None
+
+    class _MJPEGHandler(BaseHTTPRequestHandler):
+        def log_message(self, format, *args):
+            pass
+
+        def do_GET(self):
+            if self.path != '/':
+                self.send_response(404)
+                self.end_headers()
+                return
+            self.send_response(200)
+            self.send_header('Content-Type', 'multipart/x-mixed-replace; boundary=frame')
+            self.end_headers()
+            try:
+                while True:
+                    with _debug_frame_lock:
+                        frame = _debug_frame
+                    if frame is None:
+                        time.sleep(0.05)
+                        continue
+                    _, jpeg = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 70])
+                    data = jpeg.tobytes()
+                    self.wfile.write(
+                        b'--frame\r\n'
+                        b'Content-Type: image/jpeg\r\n\r\n' + data + b'\r\n'
+                    )
+                    time.sleep(0.05)
+            except (BrokenPipeError, ConnectionResetError):
+                pass
 
 
 class NodeCamera(Node):
     def __init__(self):
         super().__init__('node_camera')
 
-        # --- Parametres ---
-        self.declare_parameter('camera_index', -1)  # -1 = scan automatique
+        self.declare_parameter('camera_index', -1)
         self.camera_index_param = self.get_parameter('camera_index').value
 
-        # --- Etat interne ---
-        self.angle_servo_actuel   = ANGLE_CENTRE
-        self.vert_detecte_droite  = False
-        self.rouge_detecte_gauche = False
-        self.cap  = None
+        self.cap   = None
         self.frame = None
         self.lock  = threading.Lock()
 
-        # --- Subscriber /servo_angle ---
-        self.sub_servo = self.create_subscription(
-            UInt8, 'servo_angle', self.callback_servo, 10)
+        self.dernier_etat_publie = None
 
-        # --- Publishers ---
-        self.pub_sens     = self.create_publisher(Bool,   'bon_sens', 10)
-        self.pub_sens_str = self.create_publisher(String, 'sens_circulation', 10)
+        # Publishers
+        self.pub_bon_sens = self.create_publisher(Bool,   '/bon_sens',     10)
+        self.pub_debug    = self.create_publisher(String, 'debug_scores',  10)
 
-        # --- Thread de capture (gere aussi la reconnexion) ---
         self.running = True
         self.capture_thread = threading.Thread(target=self.capture_loop, daemon=True)
         self.capture_thread.start()
 
-        # --- Timer de traitement couleur (10Hz) ---
+        if DEBUG:
+            server = HTTPServer(('0.0.0.0', MJPEG_PORT), _MJPEGHandler)
+            threading.Thread(target=server.serve_forever, daemon=True).start()
+            self.get_logger().info(f"[DEBUG] Stream MJPEG : http://localhost:{MJPEG_PORT}/")
+
         self.create_timer(0.1, self.traitement_couleur)
 
-        self.get_logger().info("Node camera demarre — detection rouge/vert active")
-
-    # ------------------------------------------------------------------
-    # OUVERTURE CAMERA (scan agressif inspire du script Flask)
-    # ------------------------------------------------------------------
+        self.get_logger().info("Node camera initialisé.")
 
     def get_camera_instance(self):
-        """Teste les index camera dans l'ordre et retourne le premier qui fonctionne."""
-
-        # Si un index est force via parametre ROS, on essaie uniquement celui-la
-        if self.camera_index_param >= 0:
-            indices = [self.camera_index_param]
-        else:
-            indices = CAMERA_INDICES
-
+        indices = [self.camera_index_param] if self.camera_index_param >= 0 else CAMERA_INDICES
         for index in indices:
             self.get_logger().info(f"Test camera index {index}...")
             cap = cv2.VideoCapture(index, cv2.CAP_V4L2)
             if cap.isOpened():
                 cap.set(cv2.CAP_PROP_FRAME_WIDTH,  640)
                 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+                
                 ret, frame = cap.read()
                 if ret and frame is not None:
-                    self.get_logger().info(f"Camera trouvee sur l'index {index}")
                     return cap
                 cap.release()
             else:
                 cap.release()
-
-        self.get_logger().warn("Aucune camera disponible — nouvelle tentative dans 3s")
         return None
 
-    # ------------------------------------------------------------------
-    # THREAD CAPTURE
-    # ------------------------------------------------------------------
-
     def capture_loop(self):
-        """Thread dedie : gere l'ouverture, la reconnexion et la capture."""
         while self.running and rclpy.ok():
-
-            # Connexion / reconnexion
             if self.cap is None or not self.cap.isOpened():
                 with self.lock:
-                    self.frame = None  # On invalide le frame pendant la reconnexion
+                    self.frame = None
                 self.cap = self.get_camera_instance()
                 if self.cap is None:
                     time.sleep(3.0)
                     continue
 
-            # Lecture
             ret, frame = self.cap.read()
             if ret and frame is not None:
                 with self.lock:
                     self.frame = frame
             else:
-                self.get_logger().warn("Lecture camera echouee — reconnexion...")
-                self.cap.release()
+                if self.cap is not None:
+                    self.cap.release()
                 self.cap = None
                 time.sleep(1.0)
 
-            time.sleep(0.033)  # ~30fps
-
-    # ------------------------------------------------------------------
-    # CALLBACKS & DETECTION
-    # ------------------------------------------------------------------
-
-    def callback_servo(self, msg):
-        with self.lock:
-            self.angle_servo_actuel = msg.data
-
-    def detecter_vert(self, frame):
-        hsv    = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-        masque = cv2.inRange(hsv, VERT_BAS, VERT_HAUT)
-        return int(cv2.countNonZero(masque)) >= SEUIL_PIXELS
-
-    def detecter_rouge(self, frame):
-        hsv     = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-        masque1 = cv2.inRange(hsv, ROUGE_BAS_1, ROUGE_HAUT_1)
-        masque2 = cv2.inRange(hsv, ROUGE_BAS_2, ROUGE_HAUT_2)
-        masque  = cv2.bitwise_or(masque1, masque2)
-        return int(cv2.countNonZero(masque)) >= SEUIL_PIXELS
+            time.sleep(0.033)
 
     def traitement_couleur(self):
-        """Timer callback 10Hz : analyse le frame selon l'angle du servo."""
         with self.lock:
-            angle = self.angle_servo_actuel
             frame = self.frame.copy() if self.frame is not None else None
 
         if frame is None:
             return
 
-        if abs(angle - ANGLE_DROITE) <= TOLERANCE_ANGLE:
-            vert = self.detecter_vert(frame)
-            with self.lock:
-                self.vert_detecte_droite = vert
-            self.get_logger().debug(f"[DROITE 30deg] Vert: {vert}")
+        h, w = frame.shape[:2]
+        frame_bas = frame[h // 2:, :]
 
-        elif abs(angle - ANGLE_GAUCHE) <= TOLERANCE_ANGLE:
-            rouge = self.detecter_rouge(frame)
-            with self.lock:
-                self.rouge_detecte_gauche = rouge
-            self.get_logger().debug(f"[GAUCHE 150deg] Rouge: {rouge}")
+        # Étape 1 : Atténuation du bruit capteur (essentiel sur image fixe)
+        blur = cv2.GaussianBlur(frame_bas, (5, 5), 0)
+        hsv = cv2.cvtColor(blur, cv2.COLOR_BGR2HSV)
 
-        with self.lock:
-            vert  = self.vert_detecte_droite
-            rouge = self.rouge_detecte_gauche
+        masque_v  = cv2.inRange(hsv, VERT_BAS, VERT_HAUT)
+        masque_r1 = cv2.inRange(hsv, ROUGE_BAS_1, ROUGE_HAUT_1)
+        masque_r2 = cv2.inRange(hsv, ROUGE_BAS_2, ROUGE_HAUT_2)
+        masque_r  = cv2.bitwise_or(masque_r1, masque_r2)
 
-        if vert and rouge:
-            self.publier_sens(True, "BON_SENS")
-        elif not vert and not rouge:
-            self.publier_sens(None, "INCONNU")
+        # Étape 2 : Closing morphologique pour souder les zones de couleur fragmentées
+        masque_v = cv2.morphologyEx(masque_v, cv2.MORPH_CLOSE, KERNEL)
+        masque_r = cv2.morphologyEx(masque_r, cv2.MORPH_CLOSE, KERNEL)
+
+        total_vert  = int(cv2.countNonZero(masque_v))
+        total_rouge = int(cv2.countNonZero(masque_r))
+
+        etat_actuel  = None
+        label_status = "INCONNU"
+
+        if total_rouge > SEUIL_PIXELS_CONFIDENCE and total_rouge > total_vert:
+            etat_actuel  = False
+            label_status = "CONTRESENS"
+        elif total_vert > SEUIL_PIXELS_CONFIDENCE and total_vert > total_rouge:
+            etat_actuel  = True
+            label_status = "BON_SENS"
+
+        # --- LOGIQUE DE PUBLICATION SYNC AVEC L'ORCHESTRATEUR ---
+        if etat_actuel is not None:
+            msg = Bool()
+            msg.data = etat_actuel
+            self.pub_bon_sens.publish(msg)
+            
+            if etat_actuel != self.dernier_etat_publie:
+                self.get_logger().warn(f"CHANGEMENT D'ÉTAT : {label_status} ({etat_actuel})")
+                self.dernier_etat_publie = etat_actuel
         else:
-            self.publier_sens(False, "SENS_INVERSE")
+            # Si c'est INCONNU, on force un 'True' (BON_SENS) pour rassurer l'orchestrateur
+            msg = Bool()
+            msg.data = True
+            self.pub_bon_sens.publish(msg)
+            self.dernier_etat_publie = None
 
-    def publier_sens(self, bon_sens, label):
-        msg_str = String()
-        msg_str.data = label
-        self.pub_sens_str.publish(msg_str)
+        if DEBUG:
+            msg_debug = String()
+            msg_debug.data = (
+                f"V:{total_vert} R:{total_rouge} | "
+                f"STATUS:{label_status} | PUB_ACTUELLE:{self.dernier_etat_publie}"
+            )
+            self.pub_debug.publish(msg_debug)
 
-        if bon_sens is not None:
-            msg_bool = Bool()
-            msg_bool.data = bon_sens
-            self.pub_sens.publish(msg_bool)
+            debug_frame = frame.copy()
+            cv2.line(debug_frame, (0, h // 2), (w, h // 2), (128, 128, 128), 1)
+            couleur_text = (
+                (0, 255, 0) if etat_actuel is True
+                else ((0, 0, 255) if etat_actuel is False
+                      else (0, 165, 255))
+            )
+            cv2.putText(debug_frame, f"ETAT: {label_status}",
+                        (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, couleur_text, 2)
+            cv2.putText(debug_frame, f"V: {total_vert}",
+                        (10, h // 2 + 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+            cv2.putText(debug_frame, f"R: {total_rouge}",
+                        (10, h // 2 + 60), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
 
-        self.get_logger().info(f"Sens circulation : {label}")
-
-    # ------------------------------------------------------------------
-    # NETTOYAGE
-    # ------------------------------------------------------------------
+            global _debug_frame
+            with _debug_frame_lock:
+                _debug_frame = debug_frame
 
     def destroy_node(self):
         self.running = False
@@ -197,14 +218,12 @@ class NodeCamera(Node):
             self.capture_thread.join(timeout=2.0)
         if self.cap is not None and self.cap.isOpened():
             self.cap.release()
-            self.get_logger().info("Camera liberee")
         super().destroy_node()
 
 
 def main(args=None):
     rclpy.init(args=args)
     node = NodeCamera()
-
     try:
         rclpy.spin(node)
     except KeyboardInterrupt:
@@ -212,7 +231,6 @@ def main(args=None):
     finally:
         node.destroy_node()
         rclpy.shutdown()
-
 
 if __name__ == '__main__':
     main()

@@ -1,7 +1,9 @@
+#!/usr/bin/env python3
+
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
-from std_msgs.msg import UInt8, UInt16
+from std_msgs.msg import UInt8, Float32
 import serial
 import struct
 import time
@@ -23,8 +25,8 @@ class NodeController(Node):
         self.running = True
         
         # Publishers
-        self.pub_ir_gauche   = self.create_publisher(UInt16, 'ir_gauche', 10)
-        self.pub_ir_droit    = self.create_publisher(UInt16, 'ir_droit', 10)
+        self.pub_ir_gauche   = self.create_publisher(Float32, 'ir_gauche', 10)
+        self.pub_ir_droit    = self.create_publisher(Float32, 'ir_droit', 10)
         self.pub_servo_angle = self.create_publisher(UInt8,  'servo_angle', 10)
         
         # Abonnement cmd_vel
@@ -92,7 +94,8 @@ class NodeController(Node):
         checksum  = (vitesse + direction) & 0xFF
         trame     = struct.pack('BBBB', 0xFF, vitesse, direction, checksum)
 
-        self.get_logger().info(f"Envoi -> V:{vitesse} D:{direction} | Trame: {trame.hex(' ')}")
+      # self.get_logger().info(f"Envoi -> V:{vitesse} D:{direction} | Trame: {trame.hex(' ')}")
+        self.get_logger().debug(f"Envoi -> V:{vitesse} D:{direction} | Trame: {trame.hex(' ')}")
 
         with self.ser_lock:
             ser = self.ser
@@ -181,12 +184,12 @@ class NodeController(Node):
             )
             return
 
-        msg_ir_g = UInt16()
-        msg_ir_g.data = ir_gauche
+        msg_ir_g = Float32()
+        msg_ir_g.data = float(ir_gauche)
         self.pub_ir_gauche.publish(msg_ir_g)
 
-        msg_ir_d = UInt16()
-        msg_ir_d.data = ir_droit
+        msg_ir_d = Float32()
+        msg_ir_d.data = float(ir_droit)
         self.pub_ir_droit.publish(msg_ir_d)
 
         msg_servo = UInt8()

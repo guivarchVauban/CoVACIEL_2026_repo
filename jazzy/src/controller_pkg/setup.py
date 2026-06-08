@@ -26,6 +26,11 @@ setup(
         'console_scripts': [
             'node_controller = controller_pkg.node_controller:main',
             'node_camera = controller_pkg.node_camera:main',
+            'orchestrateur_node = controller_pkg.orchestrateur_node:main',
+            'node_imu = controller_pkg.node_imu:main',
+            'node_xbee = controller_pkg.node_xbee:main',
+	    'test_unitaire = controller_pkg.test_unitaire:main',
+            'car_node_orchestrateur = controller_pkg.car_node_orchestrateur:main',
         ],
     },
 )
